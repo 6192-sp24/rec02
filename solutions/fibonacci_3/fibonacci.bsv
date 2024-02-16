@@ -24,6 +24,9 @@ module mkFibonacci(Fibonacci);  // Version 4: Fancier test bench and some change
     Reg#(Bool) debug <- mkReg(False);
     Reg#(Bit#(32)) cycle <- mkReg(0);
 
+    // [0;32m      // 32 is the color code
+    // [0m
+
     rule debug_tick if (debug);
         $display("[0;32m-- Cycle %0d [%0d] --[0m", current, cycle);  // for this, then total
         cycle <= cycle + 1;
