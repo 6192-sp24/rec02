@@ -49,7 +49,8 @@ module mkFibonacci(Fibonacci);  // Version 4: Cached Version
     Reg#(Bit#(32)) cycle <- mkReg(0);
 
     rule debug_tick if (debug);
-        $display("[0;32m-- Cycle %0d [%0d] --[0m", current, cycle);  // for this, then total
+        // the '/n' in the print string is a newline
+        $display("\n[0;32m-- Cycle %0d [%0d] --[0m", current, cycle);  // for this, then total
         cycle <= cycle + 1;
     endrule
 
