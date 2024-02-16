@@ -9,20 +9,22 @@ typedef enum {
     Returning
 } State deriving (Bits, Eq, FShow);
 
-module mkFibonacci(Fibonacci);  // Version 3: Same as 2 but with cuter debug messages
+module mkFibonacci(Fibonacci);  // Version 4: Fancier test bench and some changes
     Reg#(Bit#(32)) a <- mkReg(1);
     Reg#(Bit#(32)) b <- mkReg(0);
 
-    // Why can I leave these uninitialized?
+    // Counter for however many cyicles we need
     Reg#(Bit#(8)) current <- mkRegU;
     Reg#(Bit#(8)) target <- mkRegU;
 
-    // What could this look like instead? (to manage our state machine)
+    // Enum based state
     Reg#(State) state <- mkReg(Idle);
 
+    // Little flag for making things more verbose.
+    Reg#(Bool) debug <- mkReg(False);
     Reg#(Bit#(32)) cycle <- mkReg(0);
 
-    rule debug_tick;
+    rule debug_tick if (debug);
         $display("[0;32m-- Cycle %0d [%0d] --[0m", current, cycle);  // for this, then total
         cycle <= cycle + 1;
     endrule
@@ -38,7 +40,7 @@ module mkFibonacci(Fibonacci);  // Version 3: Same as 2 but with cuter debug mes
     endrule
 
     rule complete if (state == Working && current == target);
-        $display("[0;34mAll complete[0m");
+        if (debug) $display("[0;34mAll complete[0m");
         state <= Returning;
     endrule
 
@@ -49,7 +51,7 @@ module mkFibonacci(Fibonacci);  // Version 3: Same as 2 but with cuter debug mes
         current <= 0;
         target <= n;
         state <= Working;
-        $display("Starting calculation: target %0d", n);
+        $display("[0;35mStarting calculation: target %0d[0m", n);
     endmethod
 
     method ActionValue#(Bit#(32)) get() if (state == Returning);
